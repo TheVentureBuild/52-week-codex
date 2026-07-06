@@ -289,3 +289,129 @@ export type GoogleDriveConnection = {
   supportedTypes: string[];
   status: "connected" | "syncing" | "paused";
 };
+
+export type PartnerType =
+  | "system_integrator"
+  | "reseller"
+  | "distributor"
+  | "hyperscaler"
+  | "referral_partner"
+  | "msp"
+  | "mssp"
+  | "var"
+  | "consulting_partner"
+  | "technology_partner"
+  | "marketplace_partner"
+  | "industry_association"
+  | "advisor_network"
+  | "investor_network"
+  | "other";
+
+export type RecommendationStatus =
+  | "draft"
+  | "generated"
+  | "under_review"
+  | "approved"
+  | "rejected"
+  | "prioritized"
+  | "sent_to_planning"
+  | "completed";
+
+export type Partner = {
+  id: string;
+  name: string;
+  website: string;
+  description: string;
+  partnerType: PartnerType;
+  headquarters: string;
+  geographies: string[];
+  industries: string[];
+  technologyFocus: string[];
+  cloudFocus: string[];
+  servicesOffered: string[];
+  partnerSize: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CompanyPartner = {
+  id: string;
+  companyId: string;
+  partnerId: string;
+  source: string;
+  relationshipOwner: string;
+  relationshipStrength: number;
+  notes: string;
+  status: RecommendationStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PartnerEvidence = {
+  sourceType: "document" | "intake" | "icp_analysis" | "customer_pattern" | "technology_profile" | "manual_note";
+  sourceId: string;
+  sourceLabel: string;
+  excerpt: string;
+  confidence: number;
+};
+
+export type PartnerScore = {
+  id: string;
+  companyId: string;
+  partnerId: string;
+  icpFitScore: number;
+  industryFitScore: number;
+  technologyFitScore: number;
+  cloudFitScore: number;
+  customerOverlapScore: number;
+  servicesOpportunityScore: number;
+  resaleOpportunityScore: number;
+  relationshipScore: number;
+  speedToRevenueScore: number;
+  tvbRevenuePotentialScore: number;
+  competitiveRiskScore: number;
+  totalScore: number;
+  confidenceScore: number;
+  scoreVersion: string;
+  evidence: PartnerEvidence[];
+  createdAt: string;
+};
+
+export type PartnerRecommendation = {
+  id: string;
+  companyId: string;
+  partnerId: string;
+  recommendationType: string;
+  priority: "high" | "medium" | "low";
+  rationale: string;
+  whyPartnerWouldCare: string;
+  winWinProposal: string;
+  suggestedPitch: string;
+  recommendedNextAction: string;
+  estimatedProductRevenue: number;
+  estimatedServicesRevenue: number;
+  estimatedTvbRevenue: number;
+  estimatedTimeToRevenue: string;
+  assumptions: string[];
+  risks: string[];
+  evidence: PartnerEvidence[];
+  status: RecommendationStatus;
+  owner: string;
+  notes: string;
+  markForPlanning: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PartnerImportJob = {
+  id: string;
+  companyId: string;
+  fileName: string;
+  sourceType: "manual" | "csv" | "paste" | "connector";
+  status: "queued" | "processing" | "completed" | "failed";
+  importedCount: number;
+  failedCount: number;
+  errors: string[];
+  createdAt: string;
+  completedAt?: string;
+};

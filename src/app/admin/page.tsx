@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { Badge, Card, Field, ToggleField } from "@/components/ui";
-import { defaultKnowledgeSettings, defaultModelRouting, defaultScoringWeights, moduleTwoPromptRegistry } from "@/lib/config/defaults";
+import { defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
 
 export default function AdminPage() {
   return (
@@ -45,6 +45,22 @@ export default function AdminPage() {
           <h3 className="mb-4 text-lg font-semibold">Module 2 Prompt Registry</h3>
           <div className="grid gap-2 text-sm text-muted-foreground">
             {moduleTwoPromptRegistry.map((prompt) => <span key={prompt}>{prompt}</span>)}
+          </div>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Partner Score Weights</h3>
+          <pre className="overflow-auto rounded-md bg-muted p-4 text-xs">{JSON.stringify(defaultPartnerScoringWeights, null, 2)}</pre>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Partner Types</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">
+            {defaultPartnerTypes.map((type) => <span key={type}>{type}</span>)}
+          </div>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Module 3 Prompt Registry</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">
+            {moduleThreePromptRegistry.map((prompt) => <span key={prompt}>{prompt}</span>)}
           </div>
         </Card>
       </div>

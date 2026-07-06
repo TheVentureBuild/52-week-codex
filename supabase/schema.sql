@@ -386,3 +386,100 @@ alter table company_personas enable row level security;
 alter table company_icp_analysis enable row level security;
 alter table customer_patterns enable row level security;
 alter table knowledge_processing_jobs enable row level security;
+
+create table if not exists partners (
+  id uuid primary key default gen_random_uuid(),
+  name text,
+  website text,
+  description text,
+  partner_type text,
+  headquarters text,
+  geographies jsonb default '[]',
+  industries jsonb default '[]',
+  technology_focus jsonb default '[]',
+  cloud_focus jsonb default '[]',
+  services_offered jsonb default '[]',
+  partner_size text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists company_partners (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  partner_id uuid references partners(id) on delete cascade,
+  source text,
+  relationship_owner text,
+  relationship_strength numeric,
+  notes text,
+  status text default 'generated',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists partner_scores (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  partner_id uuid references partners(id) on delete cascade,
+  icp_fit_score numeric,
+  industry_fit_score numeric,
+  technology_fit_score numeric,
+  cloud_fit_score numeric,
+  customer_overlap_score numeric,
+  services_opportunity_score numeric,
+  resale_opportunity_score numeric,
+  relationship_score numeric,
+  speed_to_revenue_score numeric,
+  tvb_revenue_potential_score numeric,
+  competitive_risk_score numeric,
+  total_score numeric,
+  confidence_score numeric,
+  score_version text,
+  evidence jsonb default '[]',
+  created_at timestamptz default now()
+);
+
+create table if not exists partner_recommendations (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  partner_id uuid references partners(id) on delete cascade,
+  recommendation_type text,
+  priority text,
+  rationale text,
+  why_partner_would_care text,
+  win_win_proposal text,
+  suggested_pitch text,
+  recommended_next_action text,
+  estimated_product_revenue numeric,
+  estimated_services_revenue numeric,
+  estimated_tvb_revenue numeric,
+  estimated_time_to_revenue text,
+  assumptions jsonb default '[]',
+  risks jsonb default '[]',
+  evidence jsonb default '[]',
+  status text default 'generated',
+  owner text,
+  notes text,
+  mark_for_planning boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists partner_import_jobs (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  file_name text,
+  source_type text,
+  status text,
+  imported_count int default 0,
+  failed_count int default 0,
+  errors jsonb default '[]',
+  created_at timestamptz default now(),
+  completed_at timestamptz
+);
+
+alter table partners enable row level security;
+alter table company_partners enable row level security;
+alter table partner_scores enable row level security;
+alter table partner_recommendations enable row level security;
+alter table partner_import_jobs enable row level security;

@@ -48,3 +48,43 @@ export const moduleTwoPromptRegistry = [
   "icp_discovery_v1",
   "knowledge_gap_analysis_v1"
 ];
+
+export const defaultPartnerScoringWeights = {
+  icpFit: 15,
+  industryFit: 10,
+  technologyFit: 10,
+  cloudFit: 10,
+  customerOverlap: 10,
+  servicesOpportunity: 15,
+  resaleOpportunity: 10,
+  relationshipStrength: 10,
+  speedToRevenue: 5,
+  tvbRevenuePotential: 5
+};
+
+export const defaultPartnerTypes = [
+  "system_integrator",
+  "reseller",
+  "distributor",
+  "hyperscaler",
+  "referral_partner",
+  "msp",
+  "mssp",
+  "var",
+  "consulting_partner",
+  "technology_partner",
+  "marketplace_partner",
+  "industry_association",
+  "advisor_network",
+  "investor_network",
+  "other"
+];
+
+export const moduleThreePromptRegistry = [
+  "partner_classifier_v1",
+  "partner_score_generator_v1",
+  "partner_rationale_generator_v1",
+  "partner_revenue_model_v1",
+  "win_win_partner_pitch_v1",
+  "partner_recommendation_reviewer_v1"
+];

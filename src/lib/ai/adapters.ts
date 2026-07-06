@@ -9,6 +9,7 @@ import {
   mockGeneratePersonas,
   mockKnowledgeGapAnalysis
 } from "@/lib/knowledge/synthesis";
+import { recommendPartner, scorePartner } from "@/lib/partners/synthesis";
 
 export class MockAIAdapter implements AIProvider {
   async generateText(input: GenerateTextInput): Promise<GenerateTextOutput> {
@@ -41,6 +42,14 @@ export class MockAIAdapter implements AIProvider {
     if (input.schemaName === "knowledge_gaps") {
       const gapInput = input.input as { intake: IntakeRecord; documents: Parameters<typeof mockKnowledgeGapAnalysis>[1] };
       return mockKnowledgeGapAnalysis(gapInput.intake, gapInput.documents) as T;
+    }
+    if (input.schemaName === "partner_score") {
+      const partnerInput = input.input as Parameters<typeof scorePartner>;
+      return scorePartner(partnerInput[0], partnerInput[1], partnerInput[2]) as T;
+    }
+    if (input.schemaName === "partner_recommendation") {
+      const recommendationInput = input.input as Parameters<typeof recommendPartner>;
+      return recommendPartner(recommendationInput[0], recommendationInput[1], recommendationInput[2]) as T;
     }
     return {} as T;
   }

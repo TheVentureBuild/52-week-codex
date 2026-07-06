@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
-import { defaultKnowledgeSettings, defaultModelRouting, defaultScoringWeights, moduleTwoPromptRegistry } from "@/lib/config/defaults";
+import { defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
 
 export async function GET() {
   return NextResponse.json({
     modelRouting: defaultModelRouting,
     scoringWeights: defaultScoringWeights,
+    partnerScoringWeights: defaultPartnerScoringWeights,
+    partnerTypes: defaultPartnerTypes,
     knowledgeSettings: defaultKnowledgeSettings,
     moduleTwoPromptRegistry,
+    moduleThreePromptRegistry,
     featureFlags: {
       founderIntakeWizard: true,
       mockAiProfileGeneration: true,
