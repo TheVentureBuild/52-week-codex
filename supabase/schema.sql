@@ -649,3 +649,235 @@ alter table commercial_forecasts enable row level security;
 alter table weekly_reviews enable row level security;
 alter table commercial_templates enable row level security;
 alter table plan_versions enable row level security;
+
+create table if not exists roles (
+  id uuid primary key default gen_random_uuid(),
+  role_key text unique,
+  name text,
+  description text,
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists permissions (
+  id uuid primary key default gen_random_uuid(),
+  permission_key text unique,
+  name text,
+  description text,
+  created_at timestamptz default now()
+);
+
+create table if not exists feature_flags (
+  id uuid primary key default gen_random_uuid(),
+  flag_key text unique,
+  scope text,
+  enabled boolean default false,
+  rules jsonb default '{}',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists platform_configurations (
+  id uuid primary key default gen_random_uuid(),
+  config_key text unique,
+  config_value jsonb,
+  scope text,
+  scope_id text,
+  active boolean default true,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists workflow_templates (
+  id uuid primary key default gen_random_uuid(),
+  template_key text unique,
+  name text,
+  config jsonb,
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists workflow_versions (
+  id uuid primary key default gen_random_uuid(),
+  workflow_template_id uuid references workflow_templates(id) on delete cascade,
+  version text,
+  config jsonb,
+  active boolean default false,
+  created_at timestamptz default now()
+);
+
+create table if not exists prompt_versions (
+  id uuid primary key default gen_random_uuid(),
+  prompt_key text,
+  version text,
+  prompt_template text,
+  target_model text,
+  temperature numeric,
+  input_schema jsonb,
+  output_schema jsonb,
+  evaluation_method text,
+  rollback_version text,
+  owner text,
+  approval_status text,
+  active boolean default false,
+  created_at timestamptz default now()
+);
+
+create table if not exists model_routing (
+  id uuid primary key default gen_random_uuid(),
+  use_case text,
+  provider_name text,
+  model_name text,
+  priority int,
+  enabled boolean default true,
+  health text,
+  config jsonb default '{}',
+  updated_at timestamptz default now()
+);
+
+create table if not exists plugin_registry (
+  id uuid primary key default gen_random_uuid(),
+  plugin_key text unique,
+  name text,
+  category text,
+  version text,
+  enabled boolean default false,
+  health text,
+  config jsonb default '{}',
+  updated_at timestamptz default now()
+);
+
+create table if not exists integration_configs (
+  id uuid primary key default gen_random_uuid(),
+  integration_key text unique,
+  provider text,
+  config jsonb default '{}',
+  enabled boolean default false,
+  health text,
+  updated_at timestamptz default now()
+);
+
+create table if not exists audit_events (
+  id uuid primary key default gen_random_uuid(),
+  actor_id uuid,
+  actor_label text,
+  event_type text,
+  target_type text,
+  target_id text,
+  summary text,
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create table if not exists evaluation_results (
+  id uuid primary key default gen_random_uuid(),
+  ai_call_id text,
+  provider text,
+  model text,
+  prompt_version text,
+  latency_ms numeric,
+  cost numeric,
+  confidence numeric,
+  evidence jsonb default '[]',
+  evaluation jsonb default '{}',
+  accepted boolean,
+  feedback text,
+  created_at timestamptz default now()
+);
+
+create table if not exists analytics_snapshots (
+  id uuid primary key default gen_random_uuid(),
+  scope text,
+  scope_id text,
+  metrics jsonb,
+  created_at timestamptz default now()
+);
+
+create table if not exists learning_events (
+  id uuid primary key default gen_random_uuid(),
+  signal text,
+  source_type text,
+  source_id text,
+  outcome text,
+  recommendation text,
+  confidence numeric,
+  created_at timestamptz default now()
+);
+
+create table if not exists feedback_events (
+  id uuid primary key default gen_random_uuid(),
+  source_type text,
+  source_id text,
+  user_id uuid,
+  rating numeric,
+  feedback text,
+  created_at timestamptz default now()
+);
+
+create table if not exists system_health (
+  id uuid primary key default gen_random_uuid(),
+  component text,
+  status text,
+  latency_ms numeric,
+  error_rate numeric,
+  metadata jsonb default '{}',
+  checked_at timestamptz default now()
+);
+
+create table if not exists job_queue (
+  id uuid primary key default gen_random_uuid(),
+  job_type text,
+  payload jsonb,
+  status text default 'queued',
+  attempts int default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists background_workers (
+  id uuid primary key default gen_random_uuid(),
+  worker_key text,
+  status text,
+  last_heartbeat timestamptz,
+  metadata jsonb default '{}'
+);
+
+create table if not exists scheduled_jobs (
+  id uuid primary key default gen_random_uuid(),
+  job_key text,
+  schedule text,
+  enabled boolean default true,
+  payload jsonb default '{}',
+  next_run_at timestamptz
+);
+
+create table if not exists notification_templates (
+  id uuid primary key default gen_random_uuid(),
+  template_key text unique,
+  channel text,
+  subject text,
+  body text,
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+alter table roles enable row level security;
+alter table permissions enable row level security;
+alter table feature_flags enable row level security;
+alter table platform_configurations enable row level security;
+alter table workflow_templates enable row level security;
+alter table workflow_versions enable row level security;
+alter table prompt_versions enable row level security;
+alter table model_routing enable row level security;
+alter table plugin_registry enable row level security;
+alter table integration_configs enable row level security;
+alter table audit_events enable row level security;
+alter table evaluation_results enable row level security;
+alter table analytics_snapshots enable row level security;
+alter table learning_events enable row level security;
+alter table feedback_events enable row level security;
+alter table system_health enable row level security;
+alter table job_queue enable row level security;
+alter table background_workers enable row level security;
+alter table scheduled_jobs enable row level security;
+alter table notification_templates enable row level security;

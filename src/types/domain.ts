@@ -523,3 +523,65 @@ export type CommercialTemplate = {
   motions: string[];
   active: boolean;
 };
+
+export type PlatformMetric = {
+  label: string;
+  value: string | number;
+  trend: string;
+};
+
+export type OrganizationRecord = {
+  id: string;
+  name: string;
+  workspaces: number;
+  companies: number;
+  users: number;
+  healthScore: number;
+};
+
+export type PlatformPrompt = {
+  promptKey: string;
+  purpose: string;
+  version: string;
+  status: "draft" | "active" | "archived";
+  targetModel: string;
+  temperature: number;
+  owner: string;
+  approvalStatus: "approved" | "pending" | "rejected";
+};
+
+export type PlatformModelRoute = {
+  useCase: string;
+  provider: string;
+  model: string;
+  priority: number;
+  enabled: boolean;
+  health: "healthy" | "degraded" | "offline";
+};
+
+export type PluginConfig = {
+  id: string;
+  name: string;
+  category: string;
+  version: string;
+  enabled: boolean;
+  health: "healthy" | "degraded" | "offline";
+};
+
+export type AuditEvent = {
+  id: string;
+  actor: string;
+  eventType: string;
+  target: string;
+  summary: string;
+  createdAt: string;
+};
+
+export type LearningEvent = {
+  id: string;
+  signal: string;
+  source: string;
+  outcome: string;
+  recommendation: string;
+  confidence: number;
+};
