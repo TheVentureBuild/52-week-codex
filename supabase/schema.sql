@@ -218,6 +218,9 @@ alter table configurations enable row level security;
 alter table prompt_registry enable row level security;
 alter table ai_provider_configs enable row level security;
 
+drop policy if exists "founders can read own companies" on companies;
+drop policy if exists "founders can write own companies" on companies;
+
 create policy "founders can read own companies" on companies
   for select using (created_by = auth.uid() or exists (select 1 from user_roles where user_id = auth.uid() and role in ('operator', 'admin')));
 
