@@ -88,3 +88,30 @@ export const moduleThreePromptRegistry = [
   "win_win_partner_pitch_v1",
   "partner_recommendation_reviewer_v1"
 ];
+
+export const defaultCommercialActivityCategories = [
+  "enterprise_sales", "system_integrator", "reseller", "distributor", "hyperscaler", "marketplace", "referral",
+  "technology_alliance", "advisor", "investor", "marketing", "events", "pilot", "poc", "product_readiness",
+  "training", "certification", "enablement", "internal"
+];
+
+export const defaultCommercialTemplates = [
+  "healthcare_channel_first",
+  "hyperscaler_first",
+  "founder_led_enterprise",
+  "enterprise_growth",
+  "international_expansion",
+  "enterprise_abm",
+  "early_stage",
+  "scale_up"
+];
+
+export const moduleFourPromptRegistry = [
+  "commercial_planner_v1",
+  "dependency_planner_v1",
+  "revenue_forecaster_v1",
+  "relationship_planner_v1",
+  "weekly_optimizer_v1",
+  "execution_reviewer_v1",
+  "replanning_agent_v1"
+];

@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { Badge, Card, Field, ToggleField } from "@/components/ui";
-import { defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
+import { defaultCommercialActivityCategories, defaultCommercialTemplates, defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleFourPromptRegistry, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
 
 export default function AdminPage() {
   return (
@@ -62,6 +62,18 @@ export default function AdminPage() {
           <div className="grid gap-2 text-sm text-muted-foreground">
             {moduleThreePromptRegistry.map((prompt) => <span key={prompt}>{prompt}</span>)}
           </div>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Commercial Activity Categories</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">{defaultCommercialActivityCategories.map((item) => <span key={item}>{item}</span>)}</div>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Commercial Templates</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">{defaultCommercialTemplates.map((item) => <span key={item}>{item}</span>)}</div>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Module 4 Prompt Registry</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">{moduleFourPromptRegistry.map((prompt) => <span key={prompt}>{prompt}</span>)}</div>
         </Card>
       </div>
     </AppShell>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
+import { defaultCommercialActivityCategories, defaultCommercialTemplates, defaultKnowledgeSettings, defaultModelRouting, defaultPartnerScoringWeights, defaultPartnerTypes, defaultScoringWeights, moduleFourPromptRegistry, moduleThreePromptRegistry, moduleTwoPromptRegistry } from "@/lib/config/defaults";
 
 export async function GET() {
   return NextResponse.json({
@@ -7,9 +7,12 @@ export async function GET() {
     scoringWeights: defaultScoringWeights,
     partnerScoringWeights: defaultPartnerScoringWeights,
     partnerTypes: defaultPartnerTypes,
+    commercialActivityCategories: defaultCommercialActivityCategories,
+    commercialTemplates: defaultCommercialTemplates,
     knowledgeSettings: defaultKnowledgeSettings,
     moduleTwoPromptRegistry,
     moduleThreePromptRegistry,
+    moduleFourPromptRegistry,
     featureFlags: {
       founderIntakeWizard: true,
       mockAiProfileGeneration: true,

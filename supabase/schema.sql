@@ -486,3 +486,166 @@ alter table company_partners enable row level security;
 alter table partner_scores enable row level security;
 alter table partner_recommendations enable row level security;
 alter table partner_import_jobs enable row level security;
+
+create table if not exists commercial_plans (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  name text,
+  template_key text,
+  horizon_weeks int,
+  status text default 'draft',
+  commercial_health_score numeric,
+  current_week int,
+  expected_pipeline numeric,
+  revenue_forecast numeric,
+  completed_activities int default 0,
+  blocked_activities int default 0,
+  at_risk_activities int default 0,
+  version int default 1,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists commercial_activities (
+  id uuid primary key default gen_random_uuid(),
+  plan_id uuid references commercial_plans(id) on delete cascade,
+  company_id uuid references companies(id) on delete cascade,
+  title text,
+  description text,
+  category text,
+  priority text,
+  owner text,
+  due_date date,
+  status text default 'draft',
+  expected_revenue numeric,
+  probability numeric,
+  confidence_score numeric,
+  evidence jsonb default '[]',
+  source_recommendation_id uuid,
+  target_company text,
+  target_partner_id uuid references partners(id) on delete set null,
+  target_contact text,
+  relationship_needed text,
+  commercial_motion text,
+  estimated_effort text,
+  why_now text,
+  sequencing_rationale text,
+  suggested_email text,
+  suggested_meeting_agenda jsonb default '[]',
+  success_criteria jsonb default '[]',
+  kpis jsonb default '[]',
+  revenue_impact numeric,
+  execution_difficulty numeric,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists activity_dependencies (
+  id uuid primary key default gen_random_uuid(),
+  activity_id uuid references commercial_activities(id) on delete cascade,
+  depends_on_activity_id uuid references commercial_activities(id) on delete cascade,
+  dependency_type text,
+  created_at timestamptz default now()
+);
+
+create table if not exists activity_assignments (
+  id uuid primary key default gen_random_uuid(),
+  activity_id uuid references commercial_activities(id) on delete cascade,
+  assigned_to text,
+  role text,
+  status text default 'active',
+  created_at timestamptz default now()
+);
+
+create table if not exists activity_notes (
+  id uuid primary key default gen_random_uuid(),
+  activity_id uuid references commercial_activities(id) on delete cascade,
+  author_id uuid,
+  note text,
+  created_at timestamptz default now()
+);
+
+create table if not exists activity_status_history (
+  id uuid primary key default gen_random_uuid(),
+  activity_id uuid references commercial_activities(id) on delete cascade,
+  old_status text,
+  new_status text,
+  changed_by uuid,
+  note text,
+  created_at timestamptz default now()
+);
+
+create table if not exists relationship_paths (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  target_partner_id uuid references partners(id) on delete set null,
+  target_contact text,
+  recommended_introduction text,
+  relationship_strength numeric,
+  tvb_owner text,
+  suggested_introduction_path text,
+  expected_outcome text,
+  path_length int,
+  warmth text,
+  confidence_score numeric,
+  created_at timestamptz default now()
+);
+
+create table if not exists commercial_forecasts (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  plan_id uuid references commercial_plans(id) on delete cascade,
+  pipeline_created numeric,
+  revenue_probability numeric,
+  expected_close date,
+  tvb_revenue numeric,
+  partner_revenue numeric,
+  services_revenue numeric,
+  learning_value numeric,
+  created_at timestamptz default now()
+);
+
+create table if not exists weekly_reviews (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  plan_id uuid references commercial_plans(id) on delete cascade,
+  week_number int,
+  completed jsonb default '[]',
+  in_progress jsonb default '[]',
+  delayed jsonb default '[]',
+  blocked jsonb default '[]',
+  recommendations jsonb default '[]',
+  created_at timestamptz default now()
+);
+
+create table if not exists commercial_templates (
+  id uuid primary key default gen_random_uuid(),
+  template_key text unique,
+  name text,
+  description text,
+  horizon_weeks int,
+  motions jsonb default '[]',
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists plan_versions (
+  id uuid primary key default gen_random_uuid(),
+  plan_id uuid references commercial_plans(id) on delete cascade,
+  version int,
+  change_reason text,
+  snapshot jsonb,
+  created_at timestamptz default now()
+);
+
+alter table commercial_plans enable row level security;
+alter table commercial_activities enable row level security;
+alter table activity_dependencies enable row level security;
+alter table activity_assignments enable row level security;
+alter table activity_notes enable row level security;
+alter table activity_status_history enable row level security;
+alter table relationship_paths enable row level security;
+alter table commercial_forecasts enable row level security;
+alter table weekly_reviews enable row level security;
+alter table commercial_templates enable row level security;
+alter table plan_versions enable row level security;

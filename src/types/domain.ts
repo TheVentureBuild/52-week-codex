@@ -415,3 +415,111 @@ export type PartnerImportJob = {
   createdAt: string;
   completedAt?: string;
 };
+
+export type CommercialActivityStatus = "draft" | "pending_approval" | "approved" | "in_progress" | "completed" | "delayed" | "blocked" | "cancelled";
+export type CommercialActivityCategory =
+  | "enterprise_sales" | "system_integrator" | "reseller" | "distributor" | "hyperscaler" | "marketplace" | "referral"
+  | "technology_alliance" | "advisor" | "investor" | "marketing" | "events" | "pilot" | "poc" | "product_readiness"
+  | "training" | "certification" | "enablement" | "internal";
+
+export type RelationshipPath = {
+  id: string;
+  companyId: string;
+  targetPartnerId?: string;
+  targetContact: string;
+  recommendedIntroduction: string;
+  relationshipStrength: number;
+  tvbOwner: string;
+  suggestedIntroductionPath: string;
+  expectedOutcome: string;
+  pathLength: number;
+  warmth: "hot" | "warm" | "cold";
+  confidenceScore: number;
+};
+
+export type CommercialActivity = {
+  id: string;
+  planId: string;
+  companyId: string;
+  title: string;
+  description: string;
+  category: CommercialActivityCategory;
+  priority: "critical" | "high" | "medium" | "low";
+  owner: string;
+  dueDate: string;
+  dependencyIds: string[];
+  status: CommercialActivityStatus;
+  expectedRevenue: number;
+  probability: number;
+  confidenceScore: number;
+  evidence: PartnerEvidence[];
+  sourceRecommendationId?: string;
+  targetCompany: string;
+  targetPartnerId?: string;
+  targetPartnerName?: string;
+  targetContact: string;
+  relationshipNeeded: string;
+  commercialMotion: string;
+  estimatedEffort: "low" | "medium" | "high";
+  whyNow: string;
+  sequencingRationale: string;
+  suggestedEmail: string;
+  suggestedMeetingAgenda: string[];
+  successCriteria: string[];
+  kpis: string[];
+  revenueImpact: number;
+  executionDifficulty: number;
+};
+
+export type CommercialPlan = {
+  id: string;
+  companyId: string;
+  name: string;
+  templateKey: string;
+  horizonWeeks: number;
+  status: "draft" | "active" | "archived";
+  commercialHealthScore: number;
+  currentWeek: number;
+  expectedPipeline: number;
+  revenueForecast: number;
+  completedActivities: number;
+  blockedActivities: number;
+  atRiskActivities: number;
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CommercialForecast = {
+  companyId: string;
+  pipelineCreated: number;
+  revenueProbability: number;
+  expectedClose: string;
+  tvbRevenue: number;
+  partnerRevenue: number;
+  servicesRevenue: number;
+  learningValue: number;
+};
+
+export type WeeklyReview = {
+  id: string;
+  companyId: string;
+  planId: string;
+  weekNumber: number;
+  completed: string[];
+  inProgress: string[];
+  delayed: string[];
+  blocked: string[];
+  recommendations: string[];
+  createdAt: string;
+};
+
+export type CommercialTemplate = {
+  id: string;
+  key: string;
+  name: string;
+  description: string;
+  horizonWeeks: number;
+  motions: string[];
+  active: boolean;
+};
