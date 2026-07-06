@@ -169,3 +169,123 @@ export type IntelligenceProfile = {
   generatedByModel: string;
   promptVersion: string;
 };
+
+export type KnowledgeProcessingStage =
+  | "uploading"
+  | "queued"
+  | "processing"
+  | "classifying"
+  | "extracting"
+  | "embedding"
+  | "graph_update"
+  | "profile_update"
+  | "completed"
+  | "failed";
+
+export type KnowledgeDocument = {
+  id: string;
+  companyId: string;
+  fileName: string;
+  documentCategory: string;
+  sourceType: "upload" | "google_drive" | "seed";
+  sourceUri: string;
+  processingStage: KnowledgeProcessingStage;
+  summary: string;
+  extractedTopics: string[];
+  extractedTechnologies: string[];
+  extractedCustomers: string[];
+  extractedCompetitors: string[];
+  extractedProducts: string[];
+  confidenceScore: number;
+  pageCount: number;
+  indexedChunks: number;
+  updatedAt: string;
+};
+
+export type KnowledgeEntity = {
+  id: string;
+  companyId: string;
+  entityType: string;
+  name: string;
+  confidenceScore: number;
+  evidence: string;
+  sourceDocument: string;
+  pageReference: string;
+  timestamp: string;
+};
+
+export type KnowledgeRelationship = {
+  id: string;
+  companyId: string;
+  sourceNode: string;
+  relationshipType: string;
+  targetNode: string;
+  confidenceScore: number;
+  evidence: string;
+};
+
+export type BuyerPersona = {
+  id: string;
+  companyId: string;
+  personaType: string;
+  title: string;
+  goals: string[];
+  painPoints: string[];
+  kpis: string[];
+  buyingCriteria: string[];
+  objections: string[];
+  decisionDrivers: string[];
+  evidence: string[];
+  confidenceScore: number;
+};
+
+export type ICPAnalysis = {
+  companyId: string;
+  currentIcp: string;
+  suggestedIcp: string;
+  confidenceScore: number;
+  supportingEvidence: string[];
+  missingSegments: string[];
+  recommendedSegments: string[];
+  priorityIndustries: string[];
+  recommendedBuyerTitles: string[];
+  idealCompanySize: string;
+  idealGeography: string;
+};
+
+export type CustomerPattern = {
+  companyId: string;
+  commonIndustry: string;
+  averageCompanySize: string;
+  commonGeography: string;
+  buyingCommittee: string[];
+  technicalDecisionMakers: string[];
+  businessDecisionMakers: string[];
+  typicalAcv: number;
+  implementationLength: string;
+  commonIntegrations: string[];
+  deploymentModels: string[];
+  successFactors: string[];
+  expansionFactors: string[];
+};
+
+export type KnowledgeHealth = {
+  companyId: string;
+  score: number;
+  documentCount: number;
+  indexedPages: number;
+  extractedEntityCount: number;
+  openQuestions: string[];
+  factors: Record<string, number>;
+};
+
+export type GoogleDriveConnection = {
+  companyId: string;
+  folderUrl: string;
+  syncFrequency: string;
+  autoSync: boolean;
+  includeSubfolders: boolean;
+  maximumFileSizeMb: number;
+  supportedTypes: string[];
+  status: "connected" | "syncing" | "paused";
+};

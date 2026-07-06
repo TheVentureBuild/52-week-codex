@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { Badge, Card, Field, ToggleField } from "@/components/ui";
-import { defaultModelRouting, defaultScoringWeights } from "@/lib/config/defaults";
+import { defaultKnowledgeSettings, defaultModelRouting, defaultScoringWeights, moduleTwoPromptRegistry } from "@/lib/config/defaults";
 
 export default function AdminPage() {
   return (
@@ -36,6 +36,16 @@ export default function AdminPage() {
         <Card>
           <h3 className="mb-4 text-lg font-semibold">Partner Score Weights</h3>
           <pre className="overflow-auto rounded-md bg-muted p-4 text-xs">{JSON.stringify(defaultScoringWeights.partner, null, 2)}</pre>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Knowledge Settings</h3>
+          <pre className="overflow-auto rounded-md bg-muted p-4 text-xs">{JSON.stringify(defaultKnowledgeSettings, null, 2)}</pre>
+        </Card>
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold">Module 2 Prompt Registry</h3>
+          <div className="grid gap-2 text-sm text-muted-foreground">
+            {moduleTwoPromptRegistry.map((prompt) => <span key={prompt}>{prompt}</span>)}
+          </div>
         </Card>
       </div>
     </AppShell>

@@ -1,10 +1,14 @@
 import Link from "next/link";
-import { Building2, ClipboardList, FileSliders, Gauge, ShieldCheck } from "lucide-react";
+import { Building2, ClipboardList, FileSearch, FileSliders, Gauge, Network, ShieldCheck, Users } from "lucide-react";
 
 const nav = [
   { href: "/", label: "Dashboard", icon: Building2 },
   { href: "/intake/healthcare-saas", label: "Intake", icon: ClipboardList },
   { href: "/profile/healthcare-saas", label: "Profile", icon: Gauge },
+  { href: "/knowledge/healthcare-saas", label: "Knowledge", icon: Network },
+  { href: "/knowledge/healthcare-saas/documents", label: "Documents", icon: FileSearch },
+  { href: "/knowledge/healthcare-saas/customers", label: "Customers", icon: Users },
+  { href: "/knowledge/healthcare-saas/icp", label: "ICP Intelligence", icon: Gauge },
   { href: "/review", label: "TVB Review", icon: ShieldCheck },
   { href: "/admin", label: "Config", icon: FileSliders }
 ];

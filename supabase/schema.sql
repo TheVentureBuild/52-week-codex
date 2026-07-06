@@ -1,4 +1,5 @@
 create extension if not exists "pgcrypto";
+create extension if not exists vector;
 
 create table if not exists workspaces (
   id uuid primary key default gen_random_uuid(),
@@ -222,3 +223,166 @@ create policy "founders can read own companies" on companies
 
 create policy "founders can write own companies" on companies
   for all using (created_by = auth.uid() or exists (select 1 from user_roles where user_id = auth.uid() and role in ('operator', 'admin')));
+
+create table if not exists knowledge_sources (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  source_type text not null,
+  source_uri text,
+  sync_frequency text,
+  auto_sync boolean default false,
+  include_subfolders boolean default false,
+  maximum_file_size_mb int,
+  supported_types jsonb default '[]',
+  status text default 'connected',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists knowledge_documents (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  source_id uuid references knowledge_sources(id),
+  file_name text,
+  file_type text,
+  document_category text,
+  storage_path text,
+  source_uri text,
+  processing_stage text default 'queued',
+  summary text,
+  extracted_topics jsonb default '[]',
+  extracted_technologies jsonb default '[]',
+  extracted_customers jsonb default '[]',
+  extracted_competitors jsonb default '[]',
+  extracted_products jsonb default '[]',
+  confidence_score numeric,
+  page_count int default 0,
+  indexed_chunks int default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists knowledge_chunks (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  document_id uuid references knowledge_documents(id) on delete cascade,
+  chunk_index int,
+  content text,
+  page_reference text,
+  token_count int,
+  embedding vector,
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create table if not exists knowledge_entities (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  document_id uuid references knowledge_documents(id) on delete set null,
+  entity_type text,
+  name text,
+  confidence_score numeric,
+  evidence text,
+  page_reference text,
+  source_timestamp timestamptz,
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create table if not exists knowledge_relationships (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  source_entity_id uuid references knowledge_entities(id) on delete cascade,
+  target_entity_id uuid references knowledge_entities(id) on delete cascade,
+  source_node text,
+  relationship_type text,
+  target_node text,
+  confidence_score numeric,
+  evidence text,
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create table if not exists knowledge_topics (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  document_id uuid references knowledge_documents(id) on delete cascade,
+  topic text,
+  confidence_score numeric,
+  evidence text,
+  created_at timestamptz default now()
+);
+
+create table if not exists company_personas (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  persona_type text,
+  title text,
+  goals jsonb default '[]',
+  pain_points jsonb default '[]',
+  kpis jsonb default '[]',
+  buying_criteria jsonb default '[]',
+  objections jsonb default '[]',
+  decision_drivers jsonb default '[]',
+  evidence jsonb default '[]',
+  confidence_score numeric,
+  generated_at timestamptz default now()
+);
+
+create table if not exists company_icp_analysis (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  current_icp text,
+  suggested_icp text,
+  confidence_score numeric,
+  supporting_evidence jsonb default '[]',
+  missing_segments jsonb default '[]',
+  recommended_segments jsonb default '[]',
+  priority_industries jsonb default '[]',
+  recommended_buyer_titles jsonb default '[]',
+  ideal_company_size text,
+  ideal_geography text,
+  generated_at timestamptz default now()
+);
+
+create table if not exists customer_patterns (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  common_industry text,
+  average_company_size text,
+  common_geography text,
+  buying_committee jsonb default '[]',
+  technical_decision_makers jsonb default '[]',
+  business_decision_makers jsonb default '[]',
+  typical_acv numeric,
+  implementation_length text,
+  common_integrations jsonb default '[]',
+  deployment_models jsonb default '[]',
+  success_factors jsonb default '[]',
+  expansion_factors jsonb default '[]',
+  generated_at timestamptz default now()
+);
+
+create table if not exists knowledge_processing_jobs (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references companies(id) on delete cascade,
+  document_id uuid references knowledge_documents(id) on delete cascade,
+  stage text default 'queued',
+  status text default 'queued',
+  restartable boolean default true,
+  error_message text,
+  started_at timestamptz,
+  completed_at timestamptz,
+  created_at timestamptz default now()
+);
+
+alter table knowledge_sources enable row level security;
+alter table knowledge_documents enable row level security;
+alter table knowledge_chunks enable row level security;
+alter table knowledge_entities enable row level security;
+alter table knowledge_relationships enable row level security;
+alter table knowledge_topics enable row level security;
+alter table company_personas enable row level security;
+alter table company_icp_analysis enable row level security;
+alter table customer_patterns enable row level security;
+alter table knowledge_processing_jobs enable row level security;
