@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, Building2, CalendarDays, ClipboardList, FileSearch, FileSliders, Gauge, Handshake, Network, Puzzle, ShieldCheck, Table2, Users } from "lucide-react";
+import { BarChart3, BookOpen, Building2, CalendarDays, ClipboardList, FileSearch, FileSliders, Gauge, Handshake, Network, Puzzle, ShieldCheck, Table2, Users } from "lucide-react";
 
 const nav = [
   { href: "/", label: "Dashboard", icon: Building2 },
@@ -16,6 +16,7 @@ const nav = [
   { href: "/platform/ai", label: "AI Governance", icon: Gauge },
   { href: "/platform/security", label: "Security", icon: ShieldCheck },
   { href: "/platform/plugins", label: "Plugins", icon: Puzzle },
+  { href: "/success", label: "Knowledge Center", icon: BookOpen },
   { href: "/review", label: "TVB Review", icon: ShieldCheck },
   { href: "/admin", label: "Config", icon: FileSliders }
 ];

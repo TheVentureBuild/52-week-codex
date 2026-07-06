@@ -1,0 +1,4 @@
+import { AppShell } from "@/components/app-shell";
+import { Badge, Card } from "@/components/ui";
+const playbooks = ["Founder Onboarding","TVB Company Review","Partner Evaluation","Weekly Commercial Review","Commercial Planning","Knowledge Management","Customer Analysis","Hyperscaler Strategy","Enterprise Sales","Partner Enablement"];
+export default function PlaybooksPage(){return <AppShell><div className="mb-6"><Badge tone="blue">Playbook Library</Badge><h2 className="mt-3 text-3xl font-semibold tracking-normal">GTM Playbooks</h2></div><div className="grid gap-5 md:grid-cols-3">{playbooks.map((p)=><Card key={p}><h3 className="font-semibold">{p}</h3><p className="mt-2 text-sm text-muted-foreground">Checklist, decision tree, success criteria, and recommended workflow.</p></Card>)}</div></AppShell>}

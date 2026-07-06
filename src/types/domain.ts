@@ -585,3 +585,50 @@ export type LearningEvent = {
   recommendation: string;
   confidence: number;
 };
+
+export type DocumentationArticle = {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  tags: string[];
+  audience: string[];
+  version: string;
+  status: "draft" | "published" | "archived";
+  owner: string;
+  relatedModules: string[];
+  relatedScreens: string[];
+  relatedApis: string[];
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  approvalStatus: "approved" | "pending" | "rejected";
+};
+
+export type DocumentationTour = {
+  id: string;
+  title: string;
+  module: string;
+  audience: string[];
+  steps: { title: string; body: string; target: string }[];
+  enabled: boolean;
+};
+
+export type DocumentationFeedback = {
+  id: string;
+  articleSlug: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
+export type ReleaseNote = {
+  id: string;
+  version: string;
+  date: string;
+  newFeatures: string[];
+  improvements: string[];
+  bugFixes: string[];
+  migrationNotes: string[];
+  breakingChanges: string[];
+};

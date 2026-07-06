@@ -881,3 +881,142 @@ alter table job_queue enable row level security;
 alter table background_workers enable row level security;
 alter table scheduled_jobs enable row level security;
 alter table notification_templates enable row level security;
+
+create table if not exists documentation_categories (
+  id uuid primary key default gen_random_uuid(),
+  category_key text unique,
+  name text,
+  description text,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_articles (
+  id uuid primary key default gen_random_uuid(),
+  title text,
+  slug text unique,
+  category text,
+  tags jsonb default '[]',
+  audience jsonb default '[]',
+  version text,
+  status text default 'draft',
+  owner text,
+  related_modules jsonb default '[]',
+  related_screens jsonb default '[]',
+  related_apis jsonb default '[]',
+  content_markdown text,
+  approval_status text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists documentation_tags (
+  id uuid primary key default gen_random_uuid(),
+  tag text unique,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_feedback (
+  id uuid primary key default gen_random_uuid(),
+  article_id uuid references documentation_articles(id) on delete cascade,
+  user_id uuid,
+  rating numeric,
+  comment text,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_versions (
+  id uuid primary key default gen_random_uuid(),
+  article_id uuid references documentation_articles(id) on delete cascade,
+  version text,
+  content_markdown text,
+  change_note text,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_views (
+  id uuid primary key default gen_random_uuid(),
+  article_id uuid references documentation_articles(id) on delete cascade,
+  user_id uuid,
+  role text,
+  viewed_at timestamptz default now()
+);
+
+create table if not exists documentation_search_index (
+  id uuid primary key default gen_random_uuid(),
+  article_id uuid references documentation_articles(id) on delete cascade,
+  searchable_text text,
+  metadata jsonb default '{}',
+  updated_at timestamptz default now()
+);
+
+create table if not exists documentation_tours (
+  id uuid primary key default gen_random_uuid(),
+  tour_key text unique,
+  title text,
+  module text,
+  audience jsonb default '[]',
+  steps jsonb default '[]',
+  enabled boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_playbooks (
+  id uuid primary key default gen_random_uuid(),
+  playbook_key text unique,
+  title text,
+  content_markdown text,
+  audience jsonb default '[]',
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_faq (
+  id uuid primary key default gen_random_uuid(),
+  question text,
+  answer_markdown text,
+  tags jsonb default '[]',
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_release_notes (
+  id uuid primary key default gen_random_uuid(),
+  version text,
+  release_date date,
+  new_features jsonb default '[]',
+  improvements jsonb default '[]',
+  bug_fixes jsonb default '[]',
+  migration_notes jsonb default '[]',
+  breaking_changes jsonb default '[]',
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_videos (
+  id uuid primary key default gen_random_uuid(),
+  title text,
+  url text,
+  related_article_id uuid references documentation_articles(id) on delete set null,
+  created_at timestamptz default now()
+);
+
+create table if not exists documentation_examples (
+  id uuid primary key default gen_random_uuid(),
+  article_id uuid references documentation_articles(id) on delete cascade,
+  example_type text,
+  content text,
+  created_at timestamptz default now()
+);
+
+alter table documentation_categories enable row level security;
+alter table documentation_articles enable row level security;
+alter table documentation_tags enable row level security;
+alter table documentation_feedback enable row level security;
+alter table documentation_versions enable row level security;
+alter table documentation_views enable row level security;
+alter table documentation_search_index enable row level security;
+alter table documentation_tours enable row level security;
+alter table documentation_playbooks enable row level security;
+alter table documentation_faq enable row level security;
+alter table documentation_release_notes enable row level security;
+alter table documentation_videos enable row level security;
+alter table documentation_examples enable row level security;
