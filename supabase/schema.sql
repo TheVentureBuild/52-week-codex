@@ -882,6 +882,47 @@ alter table background_workers enable row level security;
 alter table scheduled_jobs enable row level security;
 alter table notification_templates enable row level security;
 
+create table if not exists ui_action_events (
+  id uuid primary key default gen_random_uuid(),
+  action_key text not null,
+  entity_type text,
+  entity_id text,
+  status text default 'completed',
+  payload jsonb default '{}',
+  result jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+create table if not exists ui_action_state (
+  action_key text primary key,
+  entity_type text,
+  entity_id text,
+  status text default 'saved',
+  payload jsonb default '{}',
+  result jsonb default '{}',
+  updated_at timestamptz default now()
+);
+
+alter table ui_action_events enable row level security;
+alter table ui_action_state enable row level security;
+
+drop policy if exists "ui action events can be inserted by app" on ui_action_events;
+drop policy if exists "ui action events can be read by app" on ui_action_events;
+drop policy if exists "ui action state can be upserted by app" on ui_action_state;
+drop policy if exists "ui action state can be read by app" on ui_action_state;
+
+create policy "ui action events can be inserted by app" on ui_action_events
+  for insert to anon, authenticated with check (true);
+
+create policy "ui action events can be read by app" on ui_action_events
+  for select to anon, authenticated using (true);
+
+create policy "ui action state can be upserted by app" on ui_action_state
+  for all to anon, authenticated using (true) with check (true);
+
+create policy "ui action state can be read by app" on ui_action_state
+  for select to anon, authenticated using (true);
+
 create table if not exists documentation_categories (
   id uuid primary key default gen_random_uuid(),
   category_key text unique,
