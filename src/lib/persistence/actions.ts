@@ -21,7 +21,7 @@ export async function persistAction(input: PersistActionInput) {
     result: input.result ?? {}
   };
 
-  const { data, error } = await supabase.from("ui_action_events").insert(event).select().single();
+  const { error } = await supabase.from("ui_action_events").insert(event);
   if (error) throw new Error(error.message);
 
   if (input.updateState ?? true) {
@@ -37,7 +37,7 @@ export async function persistAction(input: PersistActionInput) {
     if (stateError) throw new Error(stateError.message);
   }
 
-  return data;
+  return event;
 }
 
 export function persistenceError(error: unknown) {

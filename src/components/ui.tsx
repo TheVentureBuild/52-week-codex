@@ -88,14 +88,24 @@ export function Button({ children, className, variant = "primary", href, action,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(action.payload ?? {})
       });
-      if (!response.ok) throw new Error(await response.text());
+      if (!response.ok) {
+        const responseText = await response.text();
+        let parsedError = responseText;
+        try {
+          const parsed = JSON.parse(responseText) as { error?: string };
+          parsedError = parsed.error ?? responseText;
+        } catch {
+          parsedError = responseText;
+        }
+        throw new Error(parsedError);
+      }
       setStatus("success");
       setMessage(action.successMessage ?? "Action completed");
       if (action.redirectTo) router.push(action.redirectTo);
       if (action.refresh) router.refresh();
-    } catch {
+    } catch (error) {
       setStatus("error");
-      setMessage(action.errorMessage ?? "Action failed");
+      setMessage(action.errorMessage ?? (error instanceof Error && error.message ? error.message.slice(0, 48) : "Action failed"));
     }
   }
 
