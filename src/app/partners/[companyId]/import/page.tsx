@@ -29,7 +29,16 @@ export default async function PartnerImportPage({ params }: { params: Promise<{ 
             <Field label="Cloud alignment" />
             <Field label="Known relationship owner" />
             <Field label="Notes" multiline />
-            <Button>Import partner</Button>
+            <Button
+              action={{
+                url: `/api/companies/${companyId}/partners/import`,
+                payload: { sourceType: "manual", rows: [{ name: "Demo Partner" }] },
+                successMessage: "Partner imported",
+                redirectTo: `/partners/${companyId}`
+              }}
+            >
+              Import partner
+            </Button>
           </div>
         </Card>
         <div className="grid gap-5">
@@ -39,12 +48,33 @@ export default async function PartnerImportPage({ params }: { params: Promise<{ 
               <UploadCloud className="mx-auto mb-3" size={28} />
               Upload a CSV with partner name, website, type, geography, industries, technologies, cloud focus, owner, and notes.
             </div>
-            <Button className="mt-4" variant="secondary">Upload CSV</Button>
+            <Button
+              className="mt-4"
+              variant="secondary"
+              action={{
+                url: `/api/companies/${companyId}/partners/import`,
+                payload: { sourceType: "csv", rows: [{ name: "CSV Demo Partner" }] },
+                successMessage: "CSV imported",
+                redirectTo: `/partners/${companyId}`
+              }}
+            >
+              Upload CSV
+            </Button>
           </Card>
           <Card>
             <h3 className="mb-4 text-lg font-semibold">Copy/Paste Table</h3>
             <Field label="Paste rows" multiline />
-            <Button className="mt-4">Parse pasted partners</Button>
+            <Button
+              className="mt-4"
+              action={{
+                url: `/api/companies/${companyId}/partners/import`,
+                payload: { sourceType: "paste", rows: [{ name: "Pasted Demo Partner" }] },
+                successMessage: "Partners parsed",
+                redirectTo: `/partners/${companyId}`
+              }}
+            >
+              Parse pasted partners
+            </Button>
           </Card>
           <Card>
             <h3 className="mb-3 font-semibold">Future Connector</h3>

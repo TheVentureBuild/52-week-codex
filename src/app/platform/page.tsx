@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { Badge, Button, Card, Progress } from "@/components/ui";
 import { organizations, platformAnalytics, platformMetrics } from "@/lib/platform/seed";
@@ -8,7 +7,7 @@ export default function PlatformDashboardPage() {
     <AppShell>
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div><Badge tone="blue">Module 05</Badge><h2 className="mt-3 text-3xl font-semibold tracking-normal">Platform Intelligence</h2><p className="mt-2 text-sm text-muted-foreground">Governance, observability, configuration, analytics, and continuous learning across the TVB Intelligence Engine.</p></div>
-        <div className="flex gap-2"><Link href="/platform/config"><Button variant="secondary">Configuration</Button></Link><Link href="/platform/analytics"><Button>Analytics</Button></Link></div>
+        <div className="flex gap-2"><Button href="/platform/config" variant="secondary">Configuration</Button><Button href="/platform/analytics">Analytics</Button></div>
       </div>
       <div className="grid gap-5 md:grid-cols-4">
         {platformMetrics.map((metric) => <Card key={metric.label}><p className="text-sm text-muted-foreground">{metric.label}</p><p className="mt-2 text-2xl font-semibold">{metric.value}</p><p className="mt-1 text-xs text-muted-foreground">{metric.trend}</p></Card>)}

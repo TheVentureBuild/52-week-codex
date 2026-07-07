@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { Badge, Button, Card, Progress } from "@/components/ui";
 import { seedIntakes } from "@/lib/data/seed";
@@ -12,7 +11,7 @@ export default function DashboardPage() {
           <h2 className="text-3xl font-semibold tracking-normal">Founder Intake & Company Intelligence</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Onboard founders, capture normalized company intelligence, and generate the first TVB profile.</p>
         </div>
-        <Link href="/intake/healthcare-saas"><Button>Create company</Button></Link>
+        <Button href="/intake/healthcare-saas">Create company</Button>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -34,8 +33,8 @@ export default function DashboardPage() {
               <Progress value={intake.company.completion} />
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <Link href={`/intake/${intake.company.id}`}><Button variant="secondary" className="w-full">Continue</Button></Link>
-              <Link href={`/profile/${intake.company.id}`}><Button className="w-full">View profile</Button></Link>
+              <Button href={`/intake/${intake.company.id}`} variant="secondary" className="w-full">Continue</Button>
+              <Button href={`/profile/${intake.company.id}`} className="w-full">View profile</Button>
             </div>
           </Card>
         ))}

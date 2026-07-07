@@ -17,7 +17,15 @@ export default async function DocumentIntelligencePage({ params }: { params: Pro
           <h2 className="mt-3 text-3xl font-semibold tracking-normal">Documents & Sources</h2>
           <p className="mt-2 text-sm text-muted-foreground">Classify documents, extract entities, connect Google Drive, and keep processing stages visible.</p>
         </div>
-        <Button><UploadCloud className="mr-2" size={16} />Upload document</Button>
+        <Button
+          action={{
+            url: "/api/knowledge/documents/upload",
+            payload: { companyId, fileName: "demo-upload.pdf", documentCategory: "uploaded_demo" },
+            successMessage: "Upload queued"
+          }}
+        >
+          <UploadCloud className="mr-2" size={16} />Upload document
+        </Button>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
@@ -35,7 +43,18 @@ export default async function DocumentIntelligencePage({ params }: { params: Pro
                     <td className="p-4"><Badge tone="green">{document.processingStage.replace("_", " ")}</Badge></td>
                     <td className="p-4">{document.extractedTopics.join(", ")}</td>
                     <td className="p-4">{document.confidenceScore}%</td>
-                    <td className="p-4"><Button variant="secondary"><RefreshCw className="mr-2" size={15} />Reprocess</Button></td>
+                    <td className="p-4">
+                      <Button
+                        variant="secondary"
+                        action={{
+                          url: "/api/knowledge/reprocess",
+                          payload: { companyId, documentId: document.id },
+                          successMessage: "Queued"
+                        }}
+                      >
+                        <RefreshCw className="mr-2" size={15} />Reprocess
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -53,7 +72,15 @@ export default async function DocumentIntelligencePage({ params }: { params: Pro
               <Field label="Supported types" value={knowledge.googleDriveConnection.supportedTypes.join(", ")} />
               <ToggleField label="Auto sync" checked={knowledge.googleDriveConnection.autoSync} />
               <ToggleField label="Include subfolders" checked={knowledge.googleDriveConnection.includeSubfolders} />
-              <Button>Connect folder</Button>
+              <Button
+                action={{
+                  url: "/api/knowledge/google-drive/connect",
+                  payload: { companyId, folderUrl: knowledge.googleDriveConnection.folderUrl },
+                  successMessage: "Folder connected"
+                }}
+              >
+                Connect folder
+              </Button>
             </div>
           </Card>
           <Card>

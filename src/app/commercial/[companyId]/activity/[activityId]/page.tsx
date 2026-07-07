@@ -14,7 +14,41 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
     <AppShell>
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div><Badge tone="blue">{activity.category.replaceAll("_", " ")}</Badge><h2 className="mt-3 text-3xl font-semibold tracking-normal">{activity.title}</h2><p className="mt-2 text-sm text-muted-foreground">{activity.description}</p></div>
-        <div className="flex gap-2"><Button>Approve</Button><Button variant="secondary">Complete</Button><Button variant="secondary">Delay</Button></div>
+        <div className="flex gap-2">
+          <Button
+            action={{
+              url: "/api/activity/approve",
+              payload: { companyId, activityId },
+              successMessage: "Approved",
+              refresh: true
+            }}
+          >
+            Approve
+          </Button>
+          <Button
+            variant="secondary"
+            action={{
+              url: "/api/activity/complete",
+              payload: { companyId, activityId },
+              successMessage: "Completed",
+              refresh: true
+            }}
+          >
+            Complete
+          </Button>
+          <Button
+            variant="secondary"
+            action={{
+              url: "/api/activity",
+              method: "PATCH",
+              payload: { companyId, activityId, status: "delayed" },
+              successMessage: "Delayed",
+              refresh: true
+            }}
+          >
+            Delay
+          </Button>
+        </div>
       </div>
       <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
         <div className="grid gap-5">

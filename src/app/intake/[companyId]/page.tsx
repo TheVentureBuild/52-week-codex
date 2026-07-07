@@ -35,8 +35,26 @@ export default async function IntakePage({ params }: { params: Promise<{ company
             <p className="mt-2 text-sm text-muted-foreground">Drafts can be saved at any point. Submission requires the minimum TVB intelligence fields.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="secondary"><Save className="mr-2" size={16} />Save draft</Button>
-            <Button><Send className="mr-2" size={16} />Submit for review</Button>
+            <Button
+              variant="secondary"
+              action={{
+                url: `/api/companies/${companyId}/intake/save`,
+                payload: intake,
+                successMessage: "Draft saved"
+              }}
+            >
+              <Save className="mr-2" size={16} />Save draft
+            </Button>
+            <Button
+              action={{
+                url: `/api/companies/${companyId}/intake/submit`,
+                payload: intake,
+                successMessage: "Submitted",
+                redirectTo: "/review"
+              }}
+            >
+              <Send className="mr-2" size={16} />Submit for review
+            </Button>
           </div>
         </div>
         <Progress value={intake.company.completion} />
@@ -142,8 +160,8 @@ export default async function IntakePage({ params }: { params: Promise<{ company
           </Card>
 
           <div className="flex justify-between">
-            <Button variant="secondary"><ArrowLeft className="mr-2" size={16} />Back</Button>
-            <Button>Next section<ArrowRight className="ml-2" size={16} /></Button>
+            <Button variant="secondary" href="/"><ArrowLeft className="mr-2" size={16} />Back</Button>
+            <Button href={`/profile/${companyId}`}>Next section<ArrowRight className="ml-2" size={16} /></Button>
           </div>
         </div>
       </div>

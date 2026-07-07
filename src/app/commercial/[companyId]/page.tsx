@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, CheckCircle2, RefreshCw } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -21,8 +20,17 @@ export default async function CommercialRoadmapPage({ params }: { params: Promis
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Activities are the operating model. The 52-week roadmap is one visualization of the shortest path to revenue.</p>
         </div>
         <div className="flex gap-2">
-          <Link href={`/commercial/${companyId}/timeline`}><Button variant="secondary"><CalendarDays className="mr-2" size={16} />Timeline</Button></Link>
-          <Button><RefreshCw className="mr-2" size={16} />Regenerate plan</Button>
+          <Button href={`/commercial/${companyId}/timeline`} variant="secondary"><CalendarDays className="mr-2" size={16} />Timeline</Button>
+          <Button
+            action={{
+              url: "/api/commercial-plan/generate",
+              payload: { companyId },
+              successMessage: "Plan regenerated",
+              refresh: true
+            }}
+          >
+            <RefreshCw className="mr-2" size={16} />Regenerate plan
+          </Button>
         </div>
       </div>
 
@@ -44,10 +52,10 @@ export default async function CommercialRoadmapPage({ params }: { params: Promis
                 <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold capitalize">{motion}</h4><Badge>{operating.activities.filter((activity) => activity.commercialMotion === motion).length} activities</Badge></div>
                 <div className="grid gap-2">
                   {operating.activities.filter((activity) => activity.commercialMotion === motion).slice(0, 4).map((activity) => (
-                    <Link key={activity.id} href={`/commercial/${companyId}/activity/${activity.id}`} className="rounded-md border border-border bg-white p-3 text-sm hover:border-primary">
+                    <a key={activity.id} href={`/commercial/${companyId}/activity/${activity.id}`} className="rounded-md border border-border bg-white p-3 text-sm hover:border-primary">
                       <div className="flex flex-wrap justify-between gap-2"><span className="font-medium">{activity.title}</span><span>{activity.dueDate}</span></div>
                       <p className="mt-1 text-muted-foreground">{activity.whyNow}</p>
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -73,7 +81,7 @@ export default async function CommercialRoadmapPage({ params }: { params: Promis
             <h3 className="mb-3 font-semibold">This Week</h3>
             <div className="grid gap-2 text-sm text-muted-foreground">{operating.weeklyReviews[0].recommendations.map((item) => <span key={item}><CheckCircle2 className="mr-2 inline" size={15} />{item}</span>)}</div>
           </Card>
-          <Link href={`/commercial/${companyId}/warm-introductions`}><Button className="w-full">Warm introductions</Button></Link>
+          <Button href={`/commercial/${companyId}/warm-introductions`} className="w-full">Warm introductions</Button>
         </div>
       </div>
     </AppShell>

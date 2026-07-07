@@ -23,7 +23,15 @@ export default async function PartnerDetailPage({ params }: { params: Promise<{ 
             <h2 className="mt-3 text-3xl font-semibold tracking-normal">{row.partner.name}</h2>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{row.partner.description}</p>
           </div>
-          <Button><CheckCircle2 className="mr-2" size={16} />Approve recommendation</Button>
+          <Button
+            action={{
+              url: `/api/companies/${companyId}/partner-recommendations/${row.recommendation.id}/approve`,
+              successMessage: "Recommendation approved",
+              redirectTo: `/partners/${companyId}/review`
+            }}
+          >
+            <CheckCircle2 className="mr-2" size={16} />Approve recommendation
+          </Button>
         </div>
       </div>
 

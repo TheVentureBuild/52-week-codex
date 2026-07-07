@@ -32,7 +32,11 @@ export default async function CommercialTimelinePage({ params }: { params: Promi
                     <div key={activity.id} className="rounded-md bg-muted p-3 text-sm">
                       <div className="flex flex-wrap justify-between gap-2"><span className="font-medium">{activity.title}</span><Badge>{activity.status}</Badge></div>
                       <div className="mt-2"><Progress value={activity.probability} /></div>
-                      <div className="mt-2 flex flex-wrap gap-2"><Button variant="secondary">Complete</Button><Button variant="secondary">Delay</Button><Button variant="secondary">Approve</Button></div>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <Button variant="secondary" action={{ url: "/api/activity/complete", payload: { companyId, activityId: activity.id }, successMessage: "Completed", refresh: true }}>Complete</Button>
+                        <Button variant="secondary" action={{ url: "/api/activity", method: "PATCH", payload: { companyId, activityId: activity.id, status: "delayed" }, successMessage: "Delayed", refresh: true }}>Delay</Button>
+                        <Button variant="secondary" action={{ url: "/api/activity/approve", payload: { companyId, activityId: activity.id }, successMessage: "Approved", refresh: true }}>Approve</Button>
+                      </div>
                     </div>
                   )) : <span className="text-sm text-muted-foreground">No activity scheduled.</span>}
                 </div>

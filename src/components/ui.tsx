@@ -1,3 +1,8 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function Badge({ children, tone = "neutral" }: { children: React.ReactNode; tone?: "neutral" | "green" | "amber" | "blue" }) {
@@ -14,16 +19,97 @@ export function Card({ children, className }: { children: React.ReactNode; class
   return <section className={cn("rounded-lg border border-border bg-card p-5 shadow-sm", className)}>{children}</section>;
 }
 
-export function Button({ children, className, variant = "primary" }: { children: React.ReactNode; className?: string; variant?: "primary" | "secondary" }) {
+type ButtonAction = {
+  url: string;
+  method?: "POST" | "PUT" | "PATCH" | "DELETE";
+  payload?: Record<string, unknown>;
+  successMessage?: string;
+  errorMessage?: string;
+  refresh?: boolean;
+  redirectTo?: string;
+};
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: React.ReactNode;
+  className?: string;
+  variant?: "primary" | "secondary";
+  href?: string;
+  action?: ButtonAction;
+  clientAction?: "copyUrl" | "print";
+};
+
+export function Button({ children, className, variant = "primary", href, action, clientAction, disabled, onClick, ...props }: ButtonProps) {
+  const router = useRouter();
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const classes = cn(
+    "inline-flex h-10 items-center justify-center rounded-md px-4 text-sm font-medium transition",
+    variant === "primary" ? "bg-primary text-primary-foreground hover:opacity-90" : "border border-border bg-white hover:bg-muted",
+    (disabled || status === "loading") && "cursor-not-allowed opacity-60",
+    className
+  );
+
+  async function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    onClick?.(event);
+    if (event.defaultPrevented) return;
+
+    if (clientAction === "copyUrl") {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setStatus("success");
+        setMessage("Link copied");
+      } catch {
+        setStatus("error");
+        setMessage("Copy unavailable");
+      }
+      return;
+    }
+
+    if (clientAction === "print") {
+      try {
+        window.print();
+        setStatus("success");
+        setMessage("Print opened");
+      } catch {
+        setStatus("error");
+        setMessage("Print unavailable");
+      }
+      return;
+    }
+
+    if (!action) return;
+
+    setStatus("loading");
+    setMessage(null);
+
+    try {
+      const response = await fetch(action.url, {
+        method: action.method ?? "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(action.payload ?? {})
+      });
+      if (!response.ok) throw new Error(await response.text());
+      setStatus("success");
+      setMessage(action.successMessage ?? "Action completed");
+      if (action.redirectTo) router.push(action.redirectTo);
+      if (action.refresh) router.refresh();
+    } catch {
+      setStatus("error");
+      setMessage(action.errorMessage ?? "Action failed");
+    }
+  }
+
+  if (href) {
+    return (
+      <Link href={href} className={classes}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <button
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-md px-4 text-sm font-medium transition",
-        variant === "primary" ? "bg-primary text-primary-foreground hover:opacity-90" : "border border-border bg-white hover:bg-muted",
-        className
-      )}
-    >
-      {children}
+    <button className={classes} disabled={disabled || status === "loading"} onClick={handleClick} type={props.type ?? "button"} {...props}>
+      {status === "loading" ? "Working..." : message ?? children}
     </button>
   );
 }

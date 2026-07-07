@@ -11,7 +11,7 @@ export default async function WeeklyReviewPage({ params }: { params: Promise<{ c
   const review = operating.weeklyReviews[0];
   return (
     <AppShell>
-      <div className="mb-6 flex justify-between gap-4"><div><Badge tone="blue">Weekly Review</Badge><h2 className="mt-3 text-3xl font-semibold tracking-normal">Week {review.weekNumber} Execution Review</h2></div><Button><RefreshCw className="mr-2" size={16} />Regenerate Plan</Button></div>
+      <div className="mb-6 flex justify-between gap-4"><div><Badge tone="blue">Weekly Review</Badge><h2 className="mt-3 text-3xl font-semibold tracking-normal">Week {review.weekNumber} Execution Review</h2></div><Button action={{ url: "/api/weekly-review", payload: { companyId }, successMessage: "Review regenerated", refresh: true }}><RefreshCw className="mr-2" size={16} />Regenerate Plan</Button></div>
       <div className="grid gap-5 md:grid-cols-5">
         {(["completed", "inProgress", "delayed", "blocked", "recommendations"] as const).map((key) => (
           <Card key={key}>

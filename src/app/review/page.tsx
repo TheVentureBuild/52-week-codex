@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CheckCircle2, MessageSquareWarning, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Badge, Button, Card } from "@/components/ui";
@@ -28,9 +27,17 @@ export default function ReviewPage() {
                   <td className="p-4">{intake.company.submittedAt ? new Date(intake.company.submittedAt).toLocaleDateString() : "Not submitted"}</td>
                   <td className="p-4">
                     <div className="flex flex-wrap gap-2">
-                      <Link href={`/intake/${intake.company.id}`}><Button variant="secondary"><MessageSquareWarning className="mr-2" size={15} />Review</Button></Link>
-                      <Link href={`/profile/${intake.company.id}`}><Button variant="secondary"><Sparkles className="mr-2" size={15} />Generate</Button></Link>
-                      <Button><CheckCircle2 className="mr-2" size={15} />Approve</Button>
+                      <Button href={`/intake/${intake.company.id}`} variant="secondary"><MessageSquareWarning className="mr-2" size={15} />Review</Button>
+                      <Button href={`/profile/${intake.company.id}`} variant="secondary"><Sparkles className="mr-2" size={15} />Generate</Button>
+                      <Button
+                        action={{
+                          url: `/api/companies/${intake.company.id}/profile/generate`,
+                          successMessage: "Approved",
+                          redirectTo: `/profile/${intake.company.id}`
+                        }}
+                      >
+                        <CheckCircle2 className="mr-2" size={15} />Approve
+                      </Button>
                     </div>
                   </td>
                 </tr>

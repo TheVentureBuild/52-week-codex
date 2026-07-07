@@ -24,8 +24,8 @@ export default async function PartnerUniversePage({ params }: { params: Promise<
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Ranked partner opportunities with commercial rationale, revenue potential, evidence, and review workflow.</p>
         </div>
         <div className="flex gap-2">
-          <Link href={`/partners/${companyId}/import`}><Button variant="secondary"><Upload className="mr-2" size={16} />Import</Button></Link>
-          <Link href={`/partners/${companyId}/matrix`}><Button><Zap className="mr-2" size={16} />Score partners</Button></Link>
+          <Button href={`/partners/${companyId}/import`} variant="secondary"><Upload className="mr-2" size={16} />Import</Button>
+          <Button href={`/partners/${companyId}/matrix`}><Zap className="mr-2" size={16} />Score partners</Button>
         </div>
       </div>
 

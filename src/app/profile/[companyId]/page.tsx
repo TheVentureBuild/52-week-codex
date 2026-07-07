@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -20,7 +19,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ compan
           <h2 className="mt-3 text-3xl font-semibold tracking-normal">{intake.company.name}</h2>
           <p className="mt-2 text-sm text-muted-foreground">Generated with {profile.generatedByModel}. Confidence and evidence placeholders are included for every profile.</p>
         </div>
-        <Button><RefreshCw className="mr-2" size={16} />Regenerate</Button>
+        <Button
+          action={{
+            url: `/api/companies/${companyId}/profile/generate`,
+            successMessage: "Profile regenerated",
+            refresh: true
+          }}
+        >
+          <RefreshCw className="mr-2" size={16} />Regenerate
+        </Button>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
@@ -64,7 +71,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ compan
             <h3 className="mb-3 font-semibold">Evidence</h3>
             <ul className="grid gap-2 text-sm text-muted-foreground">{profile.evidence.map((item) => <li key={item}>• {item}</li>)}</ul>
           </Card>
-          <Link href={`/intake/${intake.company.id}`}><Button variant="secondary" className="w-full">Edit intake</Button></Link>
+          <Button href={`/intake/${intake.company.id}`} variant="secondary" className="w-full">Edit intake</Button>
         </div>
       </div>
     </AppShell>

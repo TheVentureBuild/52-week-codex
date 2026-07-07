@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GitBranch, RefreshCw, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -21,8 +20,17 @@ export default async function KnowledgeDashboardPage({ params }: { params: Promi
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">A living evidence layer across documents, entities, customer patterns, personas, and ICP discovery.</p>
         </div>
         <div className="flex gap-2">
-          <Link href={`/knowledge/${companyId}/documents`}><Button variant="secondary"><Search className="mr-2" size={16} />Explore</Button></Link>
-          <Button><RefreshCw className="mr-2" size={16} />Refresh knowledge</Button>
+          <Button href={`/knowledge/${companyId}/documents`} variant="secondary"><Search className="mr-2" size={16} />Explore</Button>
+          <Button
+            action={{
+              url: "/api/knowledge/profile/regenerate",
+              payload: { companyId },
+              successMessage: "Knowledge refreshed",
+              refresh: true
+            }}
+          >
+            <RefreshCw className="mr-2" size={16} />Refresh knowledge
+          </Button>
         </div>
       </div>
 

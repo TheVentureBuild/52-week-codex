@@ -41,9 +41,34 @@ export default async function PartnerReviewPage({ params }: { params: Promise<{ 
                 <div className="rounded-md bg-muted p-3"><span className="text-muted-foreground">Services</span><p className="font-semibold">{formatCurrency(row.recommendation.estimatedServicesRevenue)}</p></div>
                 <div className="rounded-md bg-muted p-3"><span className="text-muted-foreground">TVB</span><p className="font-semibold">{formatCurrency(row.recommendation.estimatedTvbRevenue)}</p></div>
                 <div className="flex flex-wrap gap-2">
-                  <Button><CheckCircle2 className="mr-2" size={15} />Approve</Button>
-                  <Button variant="secondary"><XCircle className="mr-2" size={15} />Reject</Button>
-                  <Button variant="secondary"><Send className="mr-2" size={15} />Send to plan</Button>
+                  <Button
+                    action={{
+                      url: `/api/companies/${companyId}/partner-recommendations/${row.recommendation.id}/approve`,
+                      successMessage: "Approved"
+                    }}
+                  >
+                    <CheckCircle2 className="mr-2" size={15} />Approve
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    action={{
+                      url: `/api/companies/${companyId}/partner-recommendations/${row.recommendation.id}/reject`,
+                      successMessage: "Rejected"
+                    }}
+                  >
+                    <XCircle className="mr-2" size={15} />Reject
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    action={{
+                      url: "/api/commercial-plan/generate",
+                      payload: { companyId },
+                      successMessage: "Sent to plan",
+                      redirectTo: `/commercial/${companyId}`
+                    }}
+                  >
+                    <Send className="mr-2" size={15} />Send to plan
+                  </Button>
                 </div>
               </div>
             </div>
